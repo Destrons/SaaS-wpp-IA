@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'email_verified_at',
+        'phone',
+        'last_whatsapp_at',
+        'memory',
+        'remember_token',
     ];
 
     /**
@@ -43,6 +48,11 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_whatsapp_at' => 'datetime',
         ];
+    }
+
+    public function tasks(): HasMany{
+        return $this->HasMany(Task::class);
     }
 }
