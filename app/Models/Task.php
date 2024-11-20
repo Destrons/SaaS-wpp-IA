@@ -17,6 +17,16 @@ class Task extends Model
         'remember_token',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'due_at' => 'datetime',
+            'completed_at' => 'datetime',
+            'reminder_at' => 'datetime',
+            'memory' => 'json',
+        ];
+    }
+
     public function user(): BelongsTo{
         return $this->belongsTo(User::class);
     }

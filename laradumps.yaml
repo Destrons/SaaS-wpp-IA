@@ -1,0 +1,40 @@
+app:
+  primary_host: 127.0.0.1
+  secondary_host: host.docker.internal
+  port: 9191
+  workdir: /var/www/html/
+  project_path: F:\GitHub\SaaS-wpp-IA\
+  wsl_config: wsl+Ubuntu/
+config:
+  sleep: 0
+  macos_auto_launch: true
+observers:
+  auto_invoke_app: true
+  enabled_in_testing: true
+  dump: true
+  original_dump: true
+  queries: true
+  slow_queries: true
+  mail: true
+  logs: true
+  http: true
+  jobs: true
+  commands: true
+  scheduled_commands: true
+  gate: true
+xdebug:
+  client_host: 0.0.0.0
+  client_port: 9003
+logs:
+  info: false
+  warning: false
+  emergency: false
+  alert: false
+  debug: false
+  error: true
+  critical: true
+  notice: true
+  vendor: false
+  deprecated_message: false
+slow_queries:
+  threshold_in_ms: 500
