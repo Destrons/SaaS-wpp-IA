@@ -49,6 +49,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'last_whatsapp_at' => 'datetime',
+            'memory' => 'json',
         ];
     }
 
