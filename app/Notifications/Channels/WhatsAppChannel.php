@@ -32,7 +32,7 @@ class WhatsAppChannel{
                 'from' => $from,
                 'body' => $message->content
             ]
-            );
+        );
     }
     
 }
