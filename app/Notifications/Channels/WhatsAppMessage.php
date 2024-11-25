@@ -22,7 +22,7 @@ class WhatsAppMessage{
 
         public function variables($variables){
 
-            $this->variables = $variables;
+            $this->variables = json_encode($variables);
             return $this;
         }
 }

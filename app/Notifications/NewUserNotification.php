@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Channels\WhatsAppChannel;
+use App\Notifications\Channels\WhatsAppMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -28,13 +30,14 @@ class NewUserNotification extends Notification
     {
         return [WhatsAppChannel::class];
     }
+    
     public function toWhatsApp($notification)
     {
         return (new WhatsAppMessage)
             ->contentSid("HX11175782e12e1576a9c11c76dafb0406")
             ->variables([
-                "1" => '',
-                "2" => ''
+                "1" => 'name',
+                "2" => 'stripelink'
             ]);
         }
 }

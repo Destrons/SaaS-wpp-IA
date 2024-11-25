@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Notifications\Channels;
+
 use Illuminate\Notifications\Notification;
 use Twilio\Rest\Client;
 
@@ -14,6 +15,8 @@ class WhatsAppChannel{
 
         $twilio = new Client(config('twilio.account_sid'), config('twilio.auth_token'));
 
+
+        ds($message->contentSid, $message->variables);
         if($message->contentSid){
             
             return $twilio->messages->create(
