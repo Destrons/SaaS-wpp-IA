@@ -16,7 +16,7 @@ class NewUserNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected string $name, protected string $stripelink)
+    public function __construct(protected string $name/*, protected string $stripelink*/)
     {
         //
     }
@@ -34,10 +34,10 @@ class NewUserNotification extends Notification
     public function toWhatsApp($notification)
     {
         return (new WhatsAppMessage)
-            ->contentSid("HX11175782e12e1576a9c11c76dafb0406")
+            ->contentSid("HX6f820d11fd50a283fc8e0101b6c27d92")
             ->variables([
                 "1" => 'name',
-                "2" => 'stripelink'
+                /*"2" => 'stripelink'*/
             ]);
         }
 }

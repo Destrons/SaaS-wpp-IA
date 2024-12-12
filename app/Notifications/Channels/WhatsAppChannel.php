@@ -16,13 +16,13 @@ class WhatsAppChannel{
         $twilio = new Client(config('twilio.account_sid'), config('twilio.auth_token'));
 
 
-        ds($message->contentSid, $message->variables);
+        ds($to, $message->contentSid, $message->variables);
+        
         if($message->contentSid){
-            
             return $twilio->messages->create(
                 'whatsapp:' . $to,
                 [
-                    'from' => $from,
+                    'from' => 'whatsapp:' . $from,
                     'contentSid' => $message->contentSid,
                     'contentVatiables' => $message->variables
                 ]

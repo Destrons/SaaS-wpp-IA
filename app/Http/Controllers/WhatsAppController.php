@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class WhatsAppController extends Controller
 {
-    public function __construct(protected UserServices $userservices){
+    public function __construct(protected UserServices $userServices){
 
     }
     public function new_message(Request $request){
@@ -24,6 +24,5 @@ class WhatsAppController extends Controller
         }
 
         $user->notify(new NewUserNotification($user->name, "HX11175782e12e1576a9c11c76dafb0406"));
-        
     }
 }   
