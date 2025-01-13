@@ -2,28 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
+    use Hasfactory;
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'email_verified_at',
-        'phone',
-        'last_whatsapp_at',
-        'memory',
-        'remember_token',
+        'user_id',
+        'description',
+        'meta',
+        'additional_info',
+        'due_at',
+        'completed_at',
+        'reminder_at',
     ];
-
     protected function casts(): array
     {
         return [
             'due_at' => 'datetime',
             'completed_at' => 'datetime',
-            'reminder_at' => 'datetime',
-            'memory' => 'json',
+            'reminder_at' => 'datetime'
         ];
     }
 

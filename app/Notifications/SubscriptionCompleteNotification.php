@@ -9,14 +9,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewUserNotification extends Notification
+class SubscriptionCompleteNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected string $name, protected string $stripelink)
+    public function __construct(protected string $name)
     {
         //
     }
@@ -30,14 +30,13 @@ class NewUserNotification extends Notification
     {
         return [WhatsAppChannel::class];
     }
-    
+
     public function toWhatsApp($notification)
     {
         return (new WhatsAppMessage)
-            ->contentSid("HXfcfaf861bd49bef10b1e1f94a7f7947c")
+            ->contentSid("HXc043ecc475634cfb0a86a2428cb399f3")
             ->variables([
-                "1" => $this->name,
-                "2" => $this->stripelink
+                "1" => $this->name
             ]);
     }
 }

@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 
 class WhatsAppController extends Controller
 {
-    public function __construct(protected UserServices $userServices){
-
+    public function __construct(protected UserServices $userServices, protected StripeService $stripeService){
     }
+    
     public function new_message(Request $request){
 
         $phone = "+" . $request->post('WaId');
@@ -23,6 +23,9 @@ class WhatsAppController extends Controller
             $user = $this->userServices->store($request->all());
         }
 
-        $user->notify(new NewUserNotification($user->name, "HX11175782e12e1576a9c11c76dafb0406"));
+        if (!$user->subscribed()) {
+            $this->stripeService->payment($user);
+        }
+    
     }
 }   

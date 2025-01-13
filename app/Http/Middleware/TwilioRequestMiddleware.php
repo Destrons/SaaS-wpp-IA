@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twilio\Security\RequestValidator;
 
-
 class TwilioRequestMiddleware
 {
     /**
@@ -17,7 +16,6 @@ class TwilioRequestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         $validator = new RequestValidator(config('twilio.auth_token'));
 
         $signature = $request->headers->get('X-Twilio-Signature') ?? "";
