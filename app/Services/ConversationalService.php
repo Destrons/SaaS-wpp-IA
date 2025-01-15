@@ -36,6 +36,14 @@ class ConversationalService{
             $handler = $this->commands[strtolower($message)];
             return $this->{$handler}();
         }
+
+        $now = now();
+        $messages = [
+            ["role" => "user", "content" => "Aja como um assistente pessoal, hoje é $now, se for necessário faça mais perguntas para poder entender melhor a situação"],
+            ["role" => "user", "content" => $message],
+        ];
+
+        $this->talkToGpt($messages);
     }
 
     public function showMenu()
@@ -45,10 +53,50 @@ class ConversationalService{
 
     public function showSchedule()
     {
-        $tasks = $this->user->tasks->where('due_at', '>', now())
-        ->sortBy('due_at')
+        $tasks = $this->user->tasks()->where('due_at', '>', now())
+        ->orderBy('due_at')
         ->get();
 
         $this->user->notify(new ScheduleListNotification($tasks, $this->user->name));
+    }
+
+    public function talkToGpt($messages, $clearMemory= false)
+    {
+        $client = \OpenAI::client(config('openai.auth_token'));
+
+        $result = $client->chat()->create([
+            'model' => 'gpt-4o',
+            'messages' => $messages,
+            'functions' => [
+                [
+                    'name' => 'createUserTask',
+                    'description' => 'Cria uma tarefa para o usuario',
+                    'parameters' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'description' => [
+                                'type' => 'string',
+                                'description' => 'Nome da tarefa solicitada pelo usuario'
+                            ],
+                            'due_at' => [
+                                'type' => 'string',
+                                'description' => 'Data e hora da tarefa soicitada pelo usuário no formato Y-m-d H:i:s'
+                            ],
+                            'meta' => [
+                                'type' => 'string',
+                                'description' => 'Metadados da tarefa solicitada pelo usuario que o chatgpt ache interessante para posteriormente gerar  insights sobre a rotina do usuario. Ex: reuniao de negocios: Discussao de projetos'
+                            ],
+                            'reminder_at' => [
+                                'type' => 'string',
+                                'description' => 'Data e hora do lembrete da tarefa em si no formato Y-m-d H:i:s'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->user->notify(new GenericNotification($result->choices[0]->message->content));
+
     }
 }

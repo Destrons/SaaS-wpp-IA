@@ -22,7 +22,7 @@ Essas são as próximas tarefas e compromissos que você tem programados:
 Qualquer coisa que precise ajustar ou adicionar, é só me avisar! 😉";
     
     protected $tasks = [];
-    protected $name = [];
+    protected $name;
 
     /**
      * Create a new notification instance.
@@ -33,6 +33,9 @@ Qualquer coisa que precise ajustar ou adicionar, é só me avisar! 😉";
             return "{$carry}\n🕗 {$item->description} às {$item->due_at->format('H:i')} no dia {$item->due_at->format('d/m')}\n";
         });
         $this->name = $name;
+
+        $this->message = str_replace("{{name}}", $this->name, $this->message);
+        $this->message = str_replace("{{tasks}}", $this->tasks, $this->message);
     }
 
     /**
@@ -50,12 +53,8 @@ Qualquer coisa que precise ajustar ou adicionar, é só me avisar! 😉";
      */
     public function toWhatsApp()
     {
-
-        $this->message = str_replace("{{name}}", $this->name, $this->message);
-        $this->message = str_replace("{{tasks}}", $this->tasks, $this->message);
-        
         return (new WhatsAppMessage)
-            ->content($this->$message);
+            ->content($this->message);
     }
 
 }
