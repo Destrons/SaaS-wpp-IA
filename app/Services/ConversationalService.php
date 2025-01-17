@@ -12,7 +12,6 @@ use OpenAI\Testing\ClientFake;
 class ConversationalService{
 
     protected User $user;
-
     protected $client;
 
     protected array $commands = [
@@ -20,7 +19,6 @@ class ConversationalService{
         '!agenda' => 'showSchedule',
         '!insights' => 'showInsights',
         '!update' => 'updateUserTask'
-
     ];
 
     public function setUser(User $user): void
@@ -38,10 +36,17 @@ class ConversationalService{
         }
 
         $now = now();
+
+        if (empty($this->user->memory)){
         $messages = [
             ["role" => "user", "content" => "Aja como um assistente pessoal, hoje é $now, se for necessário faça mais perguntas para poder entender melhor a situação"],
             ["role" => "user", "content" => $message],
         ];
+        }
+        else {
+            $messages = $this->user->memory;
+            $messages[] = ["role" => "user", "content" => $message];
+        }
 
         $this->talkToGpt($messages);
     }
@@ -58,6 +63,19 @@ class ConversationalService{
         ->get();
 
         $this->user->notify(new ScheduleListNotification($tasks, $this->user->name));
+    }
+
+    public function createUserTask($description, $due_at, $meta, $additional_info = "", $reminder_at = "")
+    {
+          $task = $this->user->tasks()->create([
+            'description' => $description,
+            'due_at' => $due_at,
+            'meta' => $meta,
+            'additional_info' => $additional_info,
+            'reminder_at' => $reminder_at
+          ]);
+
+          return $task;
     }
 
     public function talkToGpt($messages, $clearMemory= false)
@@ -89,14 +107,60 @@ class ConversationalService{
                             'reminder_at' => [
                                 'type' => 'string',
                                 'description' => 'Data e hora do lembrete da tarefa em si no formato Y-m-d H:i:s'
+                            ],
+                            'additional_info' => [
+                                'type' => 'string',
+                                'description' => 'Informações adicioais que podem ou nao serem solicitadas ao usuario'
                             ]
                         ]
-                    ]
+                    ],
+                    'required' => 'description', 'due_at', 'meta'
                 ]
             ]
         ]);
 
-        $this->user->notify(new GenericNotification($result->choices[0]->message->content));
+        ds($messages);
 
+        if (!isset($result->choices[0]->message->functionCall)){
+            
+            if ($clearMemory){
+                $messages[] = $result->choices[0]->message;
+                $this->user->memory = $messages;
+                
+            } else {
+                $this->user->memory = null;
+            }
+            $this->user->save();
+
+            return $this->user->notify(new GenericNotification($result->choices[0]->message->content));
+            
+        }    
+        
+        $functionaName = $result->choices[0]->message->functionCall->name;
+        $arguments = json_decode($result->choices[0]->message->functionCall->arguments, true);
+
+        $messages[] = [
+            'role' => 'assistant',
+            'content' => "",
+            "functio_call" => [
+                "name" => $functionaName,
+                "arguments" => $result->choices[0]->message->functionCall->arguments
+            ]
+        ];
+
+        if (!method_exists($this, $functionaName)){
+            throw new \Exception("Function $functionaName not found");
+        }
+
+        $result = $this->{$functionaName}(...$arguments);
+
+        $messages[] = [
+            'role' => 'function',
+            'name' => $functionaName,
+            'content' => json_encode($result)
+
+        ];
+
+        $this->talkToGpt($messages, 1);
     }
 }
