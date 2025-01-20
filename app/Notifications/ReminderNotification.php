@@ -36,5 +36,6 @@ class ReminderNotification extends Notification
         return (new WhatsAppMessage)
             ->contentSid("HX203c17d1d8562c38b77e6e7c4996c6df")
             ->variables([]);
-    }
+ 
+        }
 }

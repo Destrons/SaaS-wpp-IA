@@ -19,6 +19,5 @@ Artisan::command('send:reminder', function () {
             $message = "Lembrete de tarefa: {$task->description}";
             $task->user->notify(new \App\Notifications\GenericNotification($message));
         }
-
     }
 })->everyMinute();

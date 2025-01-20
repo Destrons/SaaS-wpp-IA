@@ -55,11 +55,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function tasks(): HasMany{
-        return $this->HasMany(Task::class);
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 
-    public function routeNotificationForWhatsApp(){
+    public function routeNotificationForWhatsApp()
+    {
         return $this->phone;
     }
 }

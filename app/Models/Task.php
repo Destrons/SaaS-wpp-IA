@@ -23,7 +23,7 @@ class Task extends Model
         return [
             'due_at' => 'datetime',
             'completed_at' => 'datetime',
-            'reminder_at' => 'datetime'
+            'reminder_at' => 'datetime',
         ];
     }
 

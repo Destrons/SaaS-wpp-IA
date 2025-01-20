@@ -76,6 +76,7 @@ class ConversationalService{
         $this->talkToGpt($messages);
     }
 
+
  public function showUpdate()
     {
         $tasks = $this->user->tasks()->where('due_at', '>', now())->get();
