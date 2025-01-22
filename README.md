@@ -1,4 +1,4 @@
-# Serviço automatico de atedimento por WhatsApp Status (*Em Andamento*)
+# Serviço automatico de atedimento por WhatsApp Status (*Finalizadoo*)
 
 > Este projeto de secretaria virtual visa o atendimento virtual para pessoas individuais e também empresas. Com sua disponibilização 24h por dia, os clientes podem perguntar e obter respostas a qualquer hora do dia. 
 
@@ -39,7 +39,6 @@
     ```
 ---
 ## 📄 Documentação
-
 ---
 ## 🤝 Contribuindo
 Contribuições são bem-vindas! Siga estas etapas:
