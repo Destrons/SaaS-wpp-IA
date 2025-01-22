@@ -46,23 +46,21 @@ class ConversationalService{
 
     public function handleIncomingMessage($data)
     {
-
         $message = $data['Body'];
 
-        if (array_key_exists(strtolower($message), $this->commands)){
+        if (array_key_exists(strtolower($message), $this->commands)) {
             $handler = $this->commands[strtolower($message)];
             return $this->{$handler}();
         }
 
         $now = now();
 
-        if (empty($this->user->memory)){
-        $messages = [
-            ["role" => "user", "content" => "Aja como um assistente pessoal, hoje é $now, se for necessário faça mais perguntas para poder entender melhor a situação"],
-            ["role" => "user", "content" => $message],
-        ];
-        }
-        else {
+        if (empty($this->user->memory)) {
+            $messages = [
+                ["role" => "user", "content" => "Aja como um assistente pessoal, hoje é $now, se for necessário faça mais perguntas para poder entender melhor a situação"],
+                ["role" => "user", "content" => $message]
+            ];
+        } else {
             $messages = $this->user->memory;
             $messages[] = ["role" => "user", "content" => $message];
         }
@@ -243,7 +241,7 @@ class ConversationalService{
 
         if (!isset($result->choices[0]->message->functionCall)){
             
-            if ($clearMemory){
+            if (!$clearMemory){
                 $messages[] = $result->choices[0]->message;
                 $this->user->memory = $messages;
                 

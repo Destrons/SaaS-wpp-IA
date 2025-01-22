@@ -25,13 +25,12 @@ class WhatsAppController extends Controller
 
         if (!$user->subscribed()) {
             $this->stripeService->payment($user);
-        }
-
-        $user->last_whatsapp_at = now();
-        $user->save();
-
-        $this->conversationalService->setUser($user);
-        $this->conversationalService->handleIncomingMessage($request->all());
+        }else { 
+            $user->last_whatsapp_at = now();
+            $user->save();
     
+            $this->conversationalService->setUser($user);
+            $this->conversationalService->handleIncomingMessage($request->all());   
+        }
     }
 }   
