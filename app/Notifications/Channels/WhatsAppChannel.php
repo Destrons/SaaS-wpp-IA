@@ -4,6 +4,7 @@ namespace App\Notifications\Channels;
 
 use Illuminate\Notifications\Notification;
 use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Log;
 
 class WhatsAppChannel
 {
